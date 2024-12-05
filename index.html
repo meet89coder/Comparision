@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>String Splitter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        #result {
+            margin-top: 20px;
+        }
+        /* Red background for mismatched values */
+        .red {
+            background-color: red;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <h1>String Splitter</h1>
+    <p>Enter two strings to split by '/'</p>
+
+    <label for="input1">Input 1:</label>
+    <input type="text" id="input1" placeholder="Enter string 1"><br><br>
+
+    <label for="input2">Input 2:</label>
+    <input type="text" id="input2" placeholder="Enter string 2"><br><br>
+
+    <button onclick="processStrings()">Process</button>
+
+    <div id="result">
+        <table>
+            <thead>
+                <tr>
+                    <th>Variable</th>
+                    <th>Old FF</th>
+                    <th>New FF</th>
+                </tr>
+            </thead>
+            <tbody id="resultBody">
+                <!-- Results will be inserted here -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Predefined list of variables
+        const variables = [
+            "FF1_LastName", "FF2_FirstName", "FF3_ParticipantID", "FF4", "FF5_BookingMonth",
+            "FF6_BookingDay", "FF7_BookingYear", "FF8_OrderNumber", "FF9_AirOrCruisePoints", 
+            "FF10_TotalPoints", "FF11", "FF12_HotelPoints", "FF13_FeePoints", "FF14", 
+            "FF15_NonTravelPoints", "FF16_TotalAirTickets", "FF17_CarPoints", "FF18_InsurancePoints", 
+            "FF19_TotalRedemptionMixTickets", "FF20", "FF21_CostPointFactor", "FF22_DynamicCostFactor", 
+            "FF23_PromoPoints", "FF24_PromoPointsValue", "FF25", "FF26_MerchantRecoveryFee", "FF27", 
+            "FF28", "FF29_TotalCash", "FF30_HotelCash", "FF31_CarCash", "FF32_CashAirOrCruise", 
+            "FF33_CashInsurance", "FF34_CashOther", "FF35_CashFees", "FF36_CashTotalForPurchase", 
+            "FF37_PromoDiscountValue", "FF38_ClientFees", "FF39", "FF40_DoNotChange", "FF41", 
+            "FF42", "FF43_Cancelled", "FF44_AirFareQuoteRedemption", "FF45", "FF46_OriginDestination", 
+            "FF47", "FF48", "FF49_AirFareQuotePurchase", "FF50", "FF51", "FF52", "FF53", "FF54", "FF55", 
+            "FF56", "FF57", "FF58", "FF59", "FF60_ExchangeRate", "FF61_ForeignTotalCash", "FF62", "FF63", 
+            "FF64", "FF65", "FF66", "FF67", "FF68", "FF69", "FF70", "FF71", "FF72", "FF73", "FF74", "FF75", 
+            "FF76", "FF77", "FF78", "FF79", "FF80_CruiseShipName", "FF81_CruiseDestinationZone"
+        ];
+
+        // Process function triggered by the button
+        function processStrings() {
+            const inputString1 = document.getElementById('input1').value;
+            const inputString2 = document.getElementById('input2').value;
+
+            // Split the input strings by '/'
+            const splitStrings1 = inputString1.split('/');
+            const splitStrings2 = inputString2.split('/');
+
+            // Get the table body element where we will insert the result rows
+            const resultBody = document.getElementById('resultBody');
+            resultBody.innerHTML = ''; // Clear any previous results
+
+            // Calculate the minimum length to avoid out-of-bounds access
+            const minLength = Math.min(variables.length, splitStrings1.length, splitStrings2.length);
+
+            // Loop through and display the mapped result in the table
+            for (let i = 0; i < minLength; i++) {
+                const row = document.createElement('tr');
+                // Check if String 1 and String 2 are not equal
+                const cell1Class = splitStrings1[i] !== splitStrings2[i] ? 'red' : '';
+                const cell2Class = splitStrings1[i] !== splitStrings2[i] ? 'red' : '';
+
+                row.innerHTML = `
+                    <td>${variables[i]}</td>
+                    <td class="${cell1Class}">${splitStrings1[i]}</td>
+                    <td class="${cell2Class}">${splitStrings2[i]}</td>
+                `;
+                resultBody.appendChild(row);
+            }
+
+            // Handle additional entries if there are more parts in the input strings
+            if (splitStrings1.length > minLength || splitStrings2.length > minLength) {
+                for (let i = minLength; i < Math.max(splitStrings1.length, splitStrings2.length); i++) {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>Additional</td>
+                        <td>${splitStrings1[i] || ''}</td>
+                        <td>${splitStrings2[i] || ''}</td>
+                    `;
+                    resultBody.appendChild(row);
+                }
+            }
+
+            // Handle case when there are more variables than input parts
+            for (let i = minLength; i < variables.length; i++) {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${variables[i]}</td>
+                    <td></td>
+                    <td></td>
+                `;
+                resultBody.appendChild(row);
+            }
+        }
+    </script>
+</body>
+</html>
